@@ -1,0 +1,2 @@
+-Use lots of graphics (photos, figures, etc.).
+-Sometimes, list stuff using a bullet list, instead of mentioning about them in a paragraph. Example: The bullet list on Page 6 of the article "A Search-Based Approach for Generating Angry Birds Levels.pdf". Another example of the same kind in Page 2 of the same paper.

@@ -1,0 +1,5 @@
+-Potrace
+-Information about raster images.
+-Information about vector images.
+-Science Birds.
+-Angry Birds.
