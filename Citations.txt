@@ -1,5 +1,8 @@
 -Potrace
+  http://potrace.sourceforge.net/potrace.pdf
 -Information about raster images.
 -Information about vector images.
 -Science Birds.
 -Angry Birds.
+-Science Birds source code page (GitHub).
+-Shapely
