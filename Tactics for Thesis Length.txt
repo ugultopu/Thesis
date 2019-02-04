@@ -1,2 +1,10 @@
 -Use lots of graphics (photos, figures, etc.).
 -Sometimes, list stuff using a bullet list, instead of mentioning about them in a paragraph. Example: The bullet list on Page 6 of the article "A Search-Based Approach for Generating Angry Birds Levels.pdf". Another example of the same kind in Page 2 of the same paper.
+
+Malcolm Heywood's recommendations:
+
+  In Results section, talk about the issues that came up. What were the problem cases, how you dealt with them? Like, "if this function didn't exist, that was going to happen".
+
+  Spare around 5 pages for literature review.
+
+  The appendix (say "Appendix A") can contain screenshots from all your levels.

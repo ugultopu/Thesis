@@ -1,0 +1,4 @@
+Programmatic Content Generation (PCG), also called "Procedural Generation", is a popular topic in game development. When a feasible programmatic content generator is created for a game, the level design process becomes much faster, and possibly more diverse, for that game. This results in significant savings in game development costs, especially because of the reduced need for human level designers.
+
+History of programmatic content generation
+------------------------------------------
