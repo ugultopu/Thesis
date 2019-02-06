@@ -1,5 +1,7 @@
 \documentclass[12pt]{dalthesis}
 
+\usepackage{listings}
+
 \begin{document}
 
 \author{Utku Gultopu}
@@ -8,5 +10,235 @@
 \mainmatter
 
 \chapter{Approach}
+
+We start by selecting an image that has the potential to be a good candidate for constructing a level. This potential is primarily determined by the shape of the outline of the object represented by the image, as the content, lighting, coloring, resolution, size and even format is not of any concern of us for the purposes of generating a level. This is because the only use of the input image, the raster image, for us is to convert the input image into a vector image, specifically a Scalable Vector Graphics (SVG) image, before executing the code that actually generates a Science Birds structure. Since this code operates on an SVG image, specifically an SVG image with a \lstinline{polygon} element, all the operation that we do before feeding an SVG image that contains a \lstinline{polygon} element to the code can be simply understood as the "preprocessing stage" for constructing a Science Birds structure. Nevertheless, in order to start with a raster image and attain a Science Birds structure, all the steps in the preprocessing stage are necessary. These steps can be listed as follows:
+
+\begin{enumerate}
+  \item Converting a raster image to black-and-white: The reason for this is actually clear. We have stated that the content, lighting, coloring, resolution size or format of the image is of no concern to us, as we have stated that the only use of the image is the outline of the structure represented in that image. We have also stated that the raster image, for the purposes of generating a Science Birds structure is of no use to us, since it is not possible (or, straightforward) to obtain the outline data of the image from the raster image. Since that's the case, content, lighting and similar are simply redundant information for all of our purposes. Hence, in order to have an easier and more precise conversion from raster to vector, converting a raster image to black-and-white is a useful first step.
+
+  \item Denoising this black-and-white image: Although converting a raster image to black-and-white comes a long way for vectorizing that image, the black-and-white image after the conversion is in fact, noisy. That is, the image is in black-and-white and for the most part, represents the shape of the structure that is depicted in the original raster image. However, there is same granularity, some noise, on the edges of the structure after the conversion. This is, of course something that is not desirable, since this only makes it harder to trace this image. That is, tracing the image in this state can result in multiple, irrelevant curves in the output, instead of a single curve that represents the structure. This is not something we want, since the irrelevant curves will simply result in erroneous structure constructions. Hence, in order to remove this unwanted effect, we simply denoise the resulting black-and-white image and hence, we obtain a smooth black-and-white image that is much more suitable for producing a fine and sharp vector image.
+
+  \item "Tracing" this denoised, black-and-white image in order to obtain an SVG image: Theoretically, the raster image can be traced into a vector image using any method. Specifically, we are using the open source program named Potrace, written by Peter Selinger, for this task.
+  One of the rather important reasons for converting the original raster image to black-and-white, instead of directly tracing it (that is, creating a vector image out of it) is that the tracer (vectorizer) software that we use, Potrace, works only on black-and-white images. That is, the behavior of Potrace for non black-and-white images is undefined. Hence, we opt to use a black-and-white image as the input for Potrace. That is the main reason that we convert the original raster image into black-and-white, instead of feeding it to Potrace as is.
+
+  \item Potrace traces the raster image into a vector image successfully. However, in the output, it uses SVG \lstinline{path} elements. For general purposes, this is perfectly fine. However, the main reason that we need the SVG is in order to be able to cleanly determine the outlines of the structure represented by the raster image. The reason for doing this is as follows: When the image is in one of the raster formats, determining the outline of the structure represented by this raster image is not very straightforward. However, since all we need for the purpose of generating a Science Birds structure is the outline of the structure represented in the raster image, we need a way to somehow attain the information about the outline of the structure represented in the raster image. This is where the SVG, specifically an SVG with a \lstinline{polygon} element, comes into play. Normally raster images represent an image as a collection of pixels. Basically, in a raster image, there is no notion of a shape. That is, in a raster image, mostly the image is represented as a collection of independent picture elements (pixels). Hence, in a raster image, it is not straightforward at all to determine what sort of shape is being represented by this image. In other words, there is no proper notion of a "shape" in a raster image.
+\end{enumerate}
+
+On the other hand, vector image formats are the opposite of raster image formats. While raster image formats usually represent an image as an unrelated collection of picture elements, a vector image format, on the other hand, represents an image as a collection of shapes. It is this fundamental difference in the approach of image representation that differentiates the raster and the vector image formats. Since a vector format represents an image as a collection of shapes, a vector image is not as prone to alterations in the image quality as a result of altering the viewing point of the image. For example, a vector image is almost immune to degradation in quality when zooming in the image. It simply shows the zoomed in detail of the image as represented among the shape declarations of the vector image. It is precisely this characteristic of vector images, specifically SVG, that catches our attention. As we have stated before, for the purpose of generating a Science Birds level from an input raster image, all the information that we need from that raster image is simply the shape, that is, the outline, that this raster image represents. This outline information is best conveyed to out program with an SVG image that represents the image with an SVG \lstinline{polygon} element. Hence, this is precisely the reason that we need an SVG image with a \lstinline{polygon} element in order to cleanly attain the information about the outline of the structure represented in the raster image.
+
+\chapter{Algorithm}
+
+After obtaining the Scalable Vector Graphics (SVG) image which is produced by:
+
+\begin{enumerate}
+  \item Converting the raster image into black-and-white
+  \item Denoising it
+  \item Tracing it
+\end{enumerate}
+
+we feed this SVG image into the main script. In the main script, the following happens:
+
+\begin{enumerate}
+  \item The configuration file is read in order to determine where should the output level file be written to. The output level file is an XML file which contains a description of a Science Birds level. Overall, it has the following structure:
+
+  \begin{lstlisting}
+  <?xml version="1.0" encoding="utf-8"?>
+  <Level>
+    <Camera x="" y="" minWidth="" maxWidth="">
+    <Birds>
+      <Bird type="" />
+      ...
+    </Birds>
+    <Slingshot x="" y="" >
+    <GameObjects>
+      <Block type="" material="" x="" y="" rotation="" />
+      ...
+      <Pig type="" x="" y="" rotation=""/>
+      ...
+      <Platform type="" x="" y="" scaleX="" scaleY="" />
+      ...
+      <TNT type="" x="" y="" rotation="" />
+      ...
+    </GameObjects>
+  </Level>
+  \end{lstlisting}
+
+  Note that Science Birds developers have opted not to be very strict about the validity of XML in the level files. That is, some elements in the level actually turn the XML into invalid XML. Nevertheless, the level is still openable and it is still playable. Some examples to these invalid elements would be the elements \lstinline{Camera} and \lstinline{Slingshot}. Although these elements do not have a separate closing element, they don't end with \lstinline{/>} as they should be in valid XML. Instead, they end with \lstinline{>}, just like a self-closing tag in HTML. However, precisely speaking, a Science Birds level file is not an HTML file, it is an XML file. Hence, the aforementioned non-conforming elements should have either:
+
+  \begin{enumerate}
+    \item Had a closing tag.
+
+    or
+
+    \item Ended the single tag elements with \lstinline{>}, instead of \lstinline{/>}.
+  \end{enumerate}
+
+  in order to ensure that the XML files of Sciene Birds levels are, indeed, valid XML files.
+
+  The sample level file structure scheme above demonstrates what a generic level would be similar to. However, it doesn't go into detail of explaining what these elements are, what is their use or how do their attributes alter or enhance their behavior. In order to gain a solid understanding of the level scheme of Science Birds, we need to understand the individual elements, and the attributes of each of these individual elements that make up a Science Birds level. To do so, we need to examine the sample Science Birds XML level structure step-by-step, examining one line at each step:
+
+  \begin{enumerate}
+    \item
+
+    \begin{lstlisting}
+      <?xml version="1.0" encoding="utf-8"?>
+    \end{lstlisting}
+
+    This is simply a generic XML file declaration. Without this element, we wouldn't be able to claim that a Science Birds level file is indeed, an XML file, even though it might be composed of elements within angular brackets and the file extension in a Science Birds level filename is \lstinline{.xml}.
+
+    \item
+
+    \begin{lstlisting}
+      <Level>
+    \end{lstlisting}
+
+    This is the top-level container element that contains all the other elements that are necessary to be able to construct a complete, working Science Birds level. This is actually a container element. It is the only top-level element apart from the XML declaration line.
+
+    \item
+
+    \begin{lstlisting}
+      <Camera>
+    \end{lstlisting}
+
+    This element exists to describe where should be the view be when the level starts, and what how large should it be.
+
+    \item
+
+    \begin{lstlisting}
+      <Birds>
+    \end{lstlisting}
+
+    This is the element that contains all \lstinline{<Bird>} elements. In other words, this is a container element for the \lstinline{<Bird>} elements.
+
+    \item
+
+    \begin{lstlisting}
+      <Bird>
+    \end{lstlisting}
+
+    This is the element that adds a bird to the list of birds that can be used in this level. There are different types of birds. These types are:
+
+    \begin{enumerate}
+      \item BirdWhite
+
+      BirdWhite is a bird that is comparatively larger than the rest of the birds. The large size of this bird gives the advantage of being able to knock down more blocks due to:
+
+      \begin{enumerate}
+        \item Larger impact area.
+        \item Higher impact force due to higher momentum.
+      \end{enumerate}
+
+      \item BirdBlue
+
+      BirdBlue is a regular bird that is smaller than BirdWhite.
+
+      \item BirdYellow
+
+      BirdYellow is around the same size with BirdBlue, only that it is of yellow color.
+
+      \item BirdRed
+
+      BirdRed is similar to BirdBlue and BirdYellow, only that it is of red color.
+
+      \item BirdBlack
+
+      BirdBlack is very similar to BirdWhite in terms of size. However, BirdBlack has one property that is not observed in any of the other birds. It has the ability to explode. Upon making the first contact with any kind of surface, be it the ground, a block, a platform, a pig or a TNT block, BirdBlack becomes "rigged to explode". This "rigged to explode" state is expressed by the BirdBlack's body flashing red intermittently. That is, it's body is covered with a red hue, and then it becomes normal. This state repeats a couple times a second until the bird explodes, which takes a couple seconds. Upon explosion, any movable thing that is in the immediate surrounding of the BirdBlack is pushed away from BirdBlack. This can help with knocking down more blocks and eliminating more pigs (that is, enemies), if the BirdBlack is launched in a manner that the explosion will happen in a strategically beneficial place which will allow these.
+    \end{enumerate}
+
+    \item
+
+    \begin{lstlisting}
+      <Slingshot>
+    \end{lstlisting}
+
+    The slingshot is used to launch the birds into a trajectory in order to knock down the structures and to eliminate the enemies that are present on the level. Its attributes \lstinline{x} and \lstinline{y} are used to express the location on the two-dimensional level platform that the slingshot should be placed to.
+
+    \item
+
+    \begin{lstlisting}
+      <GameObjects>
+    \end{lstlisting}
+
+    This is a container element that is used to contain every single element in a Science Birds level, apart from the birds and the slingshot. That is, this element is used to contain all elements that a bird is able to make contact with, with of without effect. Specifically, it can contain \lstinline{<Block>}, \lstinline{<Platform>}, \lstinline{<Pig>} and \lstinline{<TNT>} elements.
+
+    \item
+
+    \begin{lstlisting}
+      <Block>
+    \end{lstlisting}
+
+    This is the main element that is used to construct structures. Basically, a Science Birds structure is an aggregation of \lstinline{<Block>} elements. Technically, \lstinline{<Platform>} elements and \lstinline{<TNT>} elements can be used as part of a structure as well, along with using a \lstinline{<Pig>} element as the enemy. However, in this programmatic content generator, a Science Birds structure consists only of \lstinline{<Block>} elements.
+
+    There are precisely thirteen different shapes of blocks. Each block type has four integrity conditions. That is, when the blocks hadn't taken any damage, they are in perfect condition. As they take more damage, their condition changes. Finally, after enough damage, a block disappears and the player gets points from this.
+
+    Of the thirteen types of blocks, twelve of them has variations in all three materials, namely "ice", "wood" and "stone". Only one of them can be drawn in only one material, which is Ice Square.
+
+    Each of the four different integrity conditions of the blocks are represented by a different sprite for each block type. Hence, the total number of sprites for all blocks is as follows:
+
+        12 * 3 * 4 + 4 = 148
+
+    The blocks, except the single material type block Ice Square, are the following:
+
+    \begin{itemize}
+      \item Small Circle
+      \item Circle
+      \item Triangle
+      \item Triangle with Hole
+      \item Small Square
+      \item Square
+      \item Square with Hole
+      \item Tiny Rectangle
+      \item Small Rectangle
+      \item Medium Rectangle
+      \item Big Rectangle
+      \item Fat Rectangle
+    \end{itemize}
+
+    So, the first two attributes of the \lstinline{<Block>} element are now clear. The \lstinline{type} attribute is used to indicate which block type this block should stand for, where those block types are listed above. On the other hand, the \lstinline{material} attribute is used to specify which material this block should be of. The possible materials are:
+
+    \begin{itemize}
+      \item Ice
+      \item Wood
+      \item Stone
+    \end{itemize}
+
+    The remaining attributes are \lstinline{x}, \lstinline{y} and \lstinline{rotation}. These have the following respective purposes:
+
+    x: This attribute specifies the location of this block on the X coordinate.
+
+    y: This attribute specifies the location of this block on the Y coordinate.
+    rotation: This attribute specifies the angle which this block is placed according to.
+
+    \item
+
+    \begin{lstlisting}
+      <Pig>
+    \end{lstlisting}
+
+    This element specifies a pig. The attributes are as follows:
+
+    \begin{itemize}
+      \item type: This attribute specifies the type of the pig. Possible values are:
+
+      \begin{itemize}
+        \item BasicBig
+        \item BasicMedium
+        \item BasicSmall
+      \end{itemize}
+
+      \item x: This attribute specifies the location of this pig on the X coordinate.
+      \item y: This attribute specifies the location of this pig on the Y coordinate.
+      rotation: This attribute specifies the angle which this pig is placed according to.
+    \end{itemize}
+
+    \item
+
+    \begin{lstlisting}
+      <TNT>
+    \end{lstlisting}
+
+    This element represents a TNT block. A TNT block is a block that is rigged to blow. Upon activation, a countdown for that TNT block starts and at the end of the countdown, the TNT block explodes. A TNT block becomes activated whenever another block hits it. The explosion of a TNT block destroys blocks and eliminates enemies in the surrounding of the TNT block, within a certain diameter.
+  \end{enumerate}
+\end{enumerate}
 
 \end{document}

@@ -91,7 +91,7 @@ BirdYellow is around the same size with BirdBlue, only that it is of yellow colo
 
 BirdRed is similar to BirdBlue and BirdYellow, only that it is of red color.
 
-- BirdBlack
+5.5 BirdBlack
 
 BirdBlack is very similar to BirdWhite in terms of size. However, BirdBlack has one property that is not observed in any of the other birds. It has the ability to explode. Upon making the first contact with any kind of surface, be it the ground, a block, a platform, a pig or a TNT block, BirdBlack becomes "rigged to explode". This "rigged to explode" state is expressed by the BirdBlack's body flashing red intermittently. That is, it's body is covered with a red hue, and then it becomes normal. This state repeats a couple times a second until the bird explodes, which takes a couple seconds. Upon explosion, any movable thing that is in the immediate surrounding of the BirdBlack is pushed away from BirdBlack. This can help with knocking down more blocks and eliminating more pigs (that is, enemies), if the BirdBlack is launched in a manner that the explosion will happen in a strategically beneficial place which will allow these.
 
@@ -170,7 +170,7 @@ This element specifies a pig. The attributes are as follows:
 
 This element represents a TNT block. A TNT block is a block that is rigged to blow. Upon activation, a countdown for that TNT block starts and at the end of the countdown, the TNT block explodes. A TNT block becomes activated whenever another block hits it. The explosion of a TNT block destroys blocks and eliminates enemies in the surrounding of the TNT block, within a certain diameter.
 
-2. After the configuration file has been read, the following parameters are extacted from it:
+2. After the configuration file has been read, the following parameters are extracted from it:
 
 
 1. LevelPath: This parameter specifies the directory where the Science Birds levels should be written to, in order to be able to play them upon launching Science Birds.
