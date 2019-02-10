@@ -1,8 +1,10 @@
 \documentclass{dalthesis}
 
+\usepackage{float}
 \usepackage{graphicx}
-\graphicspath{ {./images/} }
 \usepackage{listings}
+
+\graphicspath{ {./images/} }
 
 \begin{document}
 
@@ -130,21 +132,41 @@ we feed this SVG image into the main script. In the main script, the following h
         \item Higher impact force due to higher momentum.
       \end{enumerate}
 
+      \begin{figure}[H]
+        \includegraphics[width=.5\textwidth,keepaspectratio]{birds/white.png}
+      \end{figure}
+
       \item BirdBlue
 
       BirdBlue is a regular bird that is smaller than BirdWhite.
+
+      \begin{figure}[H]
+        \includegraphics[width=.5\textwidth,keepaspectratio]{birds/blue.png}
+      \end{figure}
 
       \item BirdYellow
 
       BirdYellow is around the same size with BirdBlue, only that it is of yellow color.
 
+      \begin{figure}[H]
+        \includegraphics[width=.5\textwidth,keepaspectratio]{birds/yellow.png}
+      \end{figure}
+
       \item BirdRed
 
       BirdRed is similar to BirdBlue and BirdYellow, only that it is of red color.
 
+      \begin{figure}[H]
+        \includegraphics[width=.5\textwidth,keepaspectratio]{birds/red.png}
+      \end{figure}
+
       \item BirdBlack
 
       BirdBlack is very similar to BirdWhite in terms of size. However, BirdBlack has one property that is not observed in any of the other birds. It has the ability to explode. Upon making the first contact with any kind of surface, be it the ground, a block, a platform, a pig or a TNT block, BirdBlack becomes "rigged to explode". This "rigged to explode" state is expressed by the BirdBlack's body flashing red intermittently. That is, it's body is covered with a red hue, and then it becomes normal. This state repeats a couple times a second until the bird explodes, which takes a couple seconds. Upon explosion, any movable thing that is in the immediate surrounding of the BirdBlack is pushed away from BirdBlack. This can help with knocking down more blocks and eliminating more pigs (that is, enemies), if the BirdBlack is launched in a manner that the explosion will happen in a strategically beneficial place which will allow these.
+
+      \begin{figure}[H]
+        \includegraphics[width=.5\textwidth,keepaspectratio]{birds/black.png}
+      \end{figure}
     \end{enumerate}
 
     \item
@@ -426,11 +448,6 @@ In this section, some sample images and Science Birds levels that are generated 
 \begin{figure}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/animals/dog.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/animals/dog.png}
-\end{figure}
-
-\begin{figure}
-  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/buildings/empire_state_building.jpg}
-  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/buildings/empire_state_building.png}
 \end{figure}
 
 \begin{figure}
