@@ -86,9 +86,9 @@ After obtaining the Scalable Vector Graphics (SVG) image which is produced by:
 we feed this SVG image into the main script. In the main script, the following happens:
 
 \begin{enumerate}
-  \item The configuration file is read in order to determine where should the output level file be written to. The output level file is an XML file which contains a description of a Science Birds level. Overall, it has the following structure:
+  \item The configuration file is read in order to determine where should the output level file be written to. The output level file is an XML file which contains a description of a Science Birds level.
 
-  \begin{lstlisting}
+  \begin{lstlisting}[float,caption=A Science Birds level template,label=level_template]]
   <?xml version="1.0" encoding="utf-8"?>
   <Level>
     <Camera x="" y="" minWidth="" maxWidth="">
@@ -109,6 +109,8 @@ we feed this SVG image into the main script. In the main script, the following h
     </GameObjects>
   </Level>
   \end{lstlisting}
+
+  \ref{level_template}
 
   Note that Science Birds developers have opted not to be very strict about the validity of XML in the level files. That is, some elements in the level actually turn the XML into invalid XML. Nevertheless, the level is still openable and it is still playable. Some examples to these invalid elements would be the elements \lstinline{Camera} and \lstinline{Slingshot}. Although these elements do not have a separate closing element, they don't end with \lstinline{/>} as they should be in valid XML. Instead, they end with \lstinline{>}, just like a self-closing tag in HTML. However, precisely speaking, a Science Birds level file is not an HTML file, it is an XML file. Hence, the aforementioned non-conforming elements should have either:
 
