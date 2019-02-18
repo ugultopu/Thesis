@@ -3,17 +3,60 @@
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage{listings}
-
+\usepackage{url}
 \graphicspath{ {./images/} }
 
 \begin{document}
-
+\title{Constructive Procedural Content Generation using Image Databases}
 \author{Utku Gultopu}
 \mcs
+\maketitle
 
 \mainmatter
+\begin{abstract}
+Procedural Content Generation (PCG) attempts to define an automated process for designing game content. Angry Birds represents a physics based game in which interesting game play comes from the challenge and/or fun associated with destroying structures using various types of `angry birds'. This thesis designs and demonstrates an approach to automating the design of the structures using a database of source objects. The hypothesis is that the resulting structures will retain some properties that remind the game player of the original object, making it `fun'. On the other hand, these structures also tend to be more varied than those produced using current approaches to PCG for the Angry Birds game. The approach is demonstrated using a database of 20 images, resulting in content that we believe improves on the longevity and enjoyment of the game relative to current practice.
+\end{abstract}
+\chapter{Introduction}
+Procedural Content Generation (PCG) for games attempts to build game content through some automated algorithm as opposed to having to design everything a priori. This means that the game designer does not need to prescribe absolutely all the content, but can concentrate on establishing the overall properties of the game. PCG has been extensively applied to automating the process of creating realistic visual properties in video games, such as vegetation (for example, the SpeedTree algorithm by Interactive Data Visualization Inc.). In this thesis, I am interested in the case of PCG for designing structural properties of the physics style game `Angry Birds'.
 
-\chapter{Approach}
+PCG for this purpose might be characterized in terms of constructive, generate-and-test or search based methods (although several other characterizations might be considered \cite{togelius11}). Constructive frameworks create content once, and therefore emphasize producing the same content each time. Moreover, any content generated this way must be `correct'. Generate-and-test schemes iterate between generating content and testing for the satisfaction of specific test criteria. Depending on which tests are satisfied/not satisfied all or part of the generated content is modified, with the process terminating once satisfying content is identified. Finally, search based methods imply that feedback on the content takes the form of a real-valued performance vector that can be used to direct an iterative search process for appropriate content.
+
+In this work, I will be interested in the specific case of generating the structural content for targets in the Angry Birds physics style of game. An open source game engine already exists for this game,\footnote{\url{https://aibirds.org}} where this has been used to demonstrate various approaches to building structural content or defining strategies for `angry bird' deployment. Past research has concentrated on the design of fitness functions for evolutionary computation (EC), so that individuals from the evolutionary method design structures that are in some way guaranteed to be stable \cite{ferreira14}, \cite{ferreira18}. To do so, such an approach need their own physics simulation in order to test the many configurations of structure that the EC method produces. Refinements to this approach include developing probabilistic models for which block (structures) are more likely to be stable \cite{stephenson16} and assuming specific build heuristics for guaranteeing the stability of the resulting structures \cite{stephenson17}.
+
+My approach will build on the previous research by assuming heuristics to ensure the stability of structures. However, rather than use some random process to define the build for structures, I will make use of silhouettes derived from real images to represent the outline of the structure. I will then fill the silhouette with blocks to provide an initial build. This can then be refined using the heuristics to provide stability to the resulting structures, i.e. introduce rectangular horizontal blocks to overhangs. Finally, I provide a heuristic for automatically placing `pigs' within the structure. This represents an example of a constructive approach, although the same source image might give multiple `builds' through changing the basic building block, or changing the aspect ratio.
+
+This thesis develops by presenting background to the game play and basic history of the Angry Birds game, Chapter \ref{sec:angrybirds}. The approach I adopt for providing automatic content generation from image data is detailed in Chapter \ref{sec:approach}. Chapter \ref{sec:algorithm} provides the detailed description for the algorithm I adopt. Chapter \ref{sec:tutorial} provides an summary to the various outputs produced by the content generator for a specific source object, with thesis Conclusions and Future work appearing in Chapter \ref{sec:conclusion}. For completeness Appendix \ref{sec:appendix} provides a complete summary of the source object images and resulting Angry Birds structures.
+
+\chapter{Background to the Angry Birds Game}\label{sec:angrybirds}
+
+Angry Birds is an example of a physics based puzzle game defined in terms of a 2-D scene and played on a wide range of mobile and personal computing devices. The game was originally created by Rovio Entertainment\footnote{\url{https://www.rovio.com}} and initially released in 2009. The original objective of the game is to have birds rescue their eggs from green-coloured pigs. The pigs are positioned in a structure constructed out of blocks, with different coloured blocks having different properties. During game play, the user defines how a sling shot is aimed/parameterized to fire the birds at the structures. Different coloured birds have different `strengths', and as the player progresses through levels of the game, more complex structures are encountered, and a greater range of bird types are made available.
+
+More points are awarded to the player for successfully killing the pigs and destroy as much of the structure using as few of the birds as possible. Most birds also have properties that can be triggered during flight. For example, the black and white birds have the ability to make explosions.
+The work of this thesis will assume the open source `Angry Birds AI' game engine.\footnote{\url{https://aibirds.org}} This was originally designed for testing AI agents that attempted to design good strategies for launching the angry birds. As such the AI agent would not have prior knowledge of the structures. The `Angry Birds AI' game engine has been used for competitions at international AI and computer gaming conferences since 2012. I will instead be interested in developing content for the structures in which pigs are placed, or level generation\footnote{\url{https://aibirds.org/other-events/level-generation-competition.html}}. Ultimately, the goal is to provide automatic content that is `fun and challenging' to play.
+
+The hypothesis of my approach is that by using silhouettes extracted from real-images, I can provide content that is both challenging and fun. There will be lots of repeating patterns, and positions for pigs, and there will be the potential for structures to remind the user of the underlying object. During the evaluation of my framework for automatically building structures I will consider how much of the structure is stable, as well as how much of the structure provides a resemblance to the original object.
+
+The closest previous research to the framework proposed in this thesis is that of Jiang et al. \cite{jiang17}. They provide an algorithm for configuring blocks to represent the characters of the alphabet. Their level generator then assembles sequences of characters (and therefore blocks) using a database of quotes. Figure \ref{fig:jiangEg} provides an example of levels generated using this approach. I note that these structures are not particularly complex, and generally have a horizontal orientation.
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=8.5cm]{./Jiang.pdf}
+\caption{Example of structures built using the PCG of Jiang et al. \cite{jiang17}.}
+\label{fig:jiangEg}
+\end{center}
+\end{figure}
+
+From the perspective of creating more complex builds, the most recent work of Ferreira et al. is capable of constructing both high and wide aspect ratio structures \cite{ferreira18}. However, as can be seen from Figure \ref{fig:ferreiraEg} these structures lack a theme, and are generally unrelated to structures that might correspond to every-day objects.
+
+\begin{figure}
+\begin{center}
+	\includegraphics[width=9cm]{./Ferreira.pdf}
+\caption{Example of structures built using the PCG of Ferreira et al. \cite{ferreira18}.}
+\label{fig:ferreiraEg}
+\end{center}
+\end{figure}
+
+\chapter{Approach}\label{sec:approach}
 
 We start by selecting an image that has the potential to be a good candidate for constructing a level. This potential is primarily determined by the shape of the outline of the object represented by the image, as the content, lighting, coloring, resolution, size and even format is not of any concern of us for the purposes of generating a level. This is because the only use of the input image, the raster image, for us is to convert the input image into a vector image, specifically a Scalable Vector Graphics (SVG) image, before executing the code that actually generates a Science Birds structure. Since this code operates on an SVG image, specifically an SVG image with a \lstinline{polygon} element, all the operation that we do before feeding an SVG image that contains a \lstinline{polygon} element to the code can be simply understood as the "preprocessing stage" for constructing a Science Birds structure. Nevertheless, in order to start with a raster image and attain a Science Birds structure, all the steps in the preprocessing stage are necessary. These steps can be listed as follows:
 
@@ -72,7 +115,7 @@ Some of the steps in the flowchart are explained in detail below:
 
 On the other hand, vector image formats are the opposite of raster image formats. While raster image formats usually represent an image as an unrelated collection of picture elements, a vector image format, on the other hand, represents an image as a collection of shapes. It is this fundamental difference in the approach of image representation that differentiates the raster and the vector image formats. Since a vector format represents an image as a collection of shapes, a vector image is not as prone to alterations in the image quality as a result of altering the viewing point of the image. For example, a vector image is almost immune to degradation in quality when zooming in the image. It simply shows the zoomed in detail of the image as represented among the shape declarations of the vector image. It is precisely this characteristic of vector images, specifically SVG, that catches our attention. As we have stated before, for the purpose of generating a Science Birds level from an input raster image, all the information that we need from that raster image is simply the shape, that is, the outline, that this raster image represents. This outline information is best conveyed the level generator with an SVG image that represents the image with an SVG \lstinline{polygon} element. Hence, this is precisely the reason that we need an SVG image with a \lstinline{polygon} element in order to cleanly attain the information about the outline of the structure represented in the raster image.
 
-\chapter{Algorithm}
+\chapter{Algorithm}\label{sec:algorithm}
 
 After obtaining the Scalable Vector Graphics (SVG) image which is produced by:
 
@@ -483,7 +526,21 @@ we feed this SVG image into the main script. In the main script, the following h
 
 This concludes the members of the Structure class.
 
-\chapter{Appendix - Level Screenshots}
+\chapter{Example of the Build Process}\label{sec:tutorial}
+
+\chapter{Conclusion}\label{sec:conclusion}
+
+The general goal of PCG is to provide new content through an automated process. This has the potential to improve the long-levity of the game itself as the content is never explicitly the ‘same’ and/or there is never an ‘end’ to the game. Moreover, it also implies that the cost of creating new games might decrease because it is no longer necessary to explicitly design every part of the gaming experience. In this thesis I am explicitly interested in the issue of PCG under a physics based gaming environment of which titles such as Angry Birds and Cut the Rope represent well known examples. Within the context of this work I concentrate on an ‘Angry Birds’ style of task. That is to say, the player has to use their skill in interpreting the Newtonian physics to aim Angry Bird projectiles with different properties to score points. Part of the process involves the destruction of objects that could be blocking the path to the target. Unlike previous work in PCG for this style of game I adopt an approach in which image data, possibly even captured by the user, represent the basis for designing the Angry Bird structure in which pigs are placed. The motivation for doing so is to increase the range of complexity of the resulting structures, while simultaneously reminding the reader of the original object. I believe that such an approach will both challenge and entertain the user.
+
+The algorithm adopted first requires that the foreground object from the image is identified using image editing software, for which several applications are available. With the target object identified, a corresponding silhouette is extracted. The silhouette is used as the basis for defining a low resolution matrix expressing the basic location for square blocks. However, as soon as the original object (and therefore the corresponding matrix) has any overhang, then gravity will result in blocks free falling. I therefore also introduce a process for identifying the overhanging blocks and replace (sequences) of them with horizontal rectangles, such that the stability of the resulting structure is initially guaranteed. A final process provides for the automatic placement of pigs within the structure, such that holes and supporting structures are introduced into the structure.
+
+A database of 20 different source images is built in order to illustrate the relative generality of the approach. A wide range of source objects are considered, from the face of animals, to profiles of animals, to the profile of well known buildings, to ships and Jack-O-Lantern. Some builds are definitely more stable than others. However, the builds as a whole are generally much more complex than previously attempted by entries to the Angry Birds competition.
+
+Future work will introduce a rule base to identify most likely sources of instabilities in the initial builds. Specific examples could be to include Newtonian physics into the assessment of rectangular blocks used to provide overhangs, and the introduction of minimal inter-block placing (stops blocks from `leaning' against each other, where such leans appears to introduce instabilities).
+
+Another potential area of development is to consider the use of some recent outcomes from deep learning in which objects are automatically identified in source images, therefore further removing the need for human intervention.
+\appendix
+\chapter{Appendix - Level Screenshots}\label{sec:appendix}
 
 In this section, some sample images and Science Birds levels that are generated from these images are presented.
 
@@ -586,5 +643,8 @@ In this section, some sample images and Science Birds levels that are generated 
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/ships/rowboat.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/ships/rowboat.png}
 \end{figure}
+
+\bibliographystyle{plain}
+\bibliography{intro}
 
 \end{document}
