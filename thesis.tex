@@ -528,9 +528,107 @@ This concludes the members of the Structure class.
 
 \chapter{Example of the Build Process}\label{sec:tutorial}
 
+This chapter walks through construction of a Science Birds level from a given raster image step-by-step. The aim is to let the reader to gain a better understanding of the level construction process.
+
+Let's assume that the user of the programmatic content generator has obtained the following image:
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-unedited.jpg}
+\end{figure}
+
+First, the user has to trim this image so that only the cow itself is remaining in the image. The details of accomplishing this is left to the user. A common method is to simply use an image editing software to cut out the cow from the whole image.
+
+After the cow is obtained, the image becomes the following:
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow.jpg}
+\end{figure}
+
+After that, this image is converted to black-and-white, denoised and vectorized. The details of these processes are in chapter \ref{sec:approach}, hence they won't be repeated in this section. For further information, please refer to chapter \ref{sec:approach}.
+
+After vectorization, the following image is obtained:
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-black-and-white-denoised-polygon.jpg}
+\end{figure}
+
+This image represents the silhouette that is obtained from the input image. After that, this image is fed into the programmatic content generator for the actual level generation.
+
+In the programmatic content generator, the image is partitioned into a mesh. The shapes of the individual loops (the identical components that compose the mesh) are the same as the shape of the primary block that is declared in the configuration file. The only difference between the two is the size of the loops. According to the size of the input image, without changing the aspect ratio, the size of the loop can be shrunken, expanded or kept the same. This is done in order to comply with the number of primary blocks to have on the X axis, which is again declared in the configuration file.
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-meshed-plain.jpg}
+\end{figure}
+
+Since the primary block of our choice for this example has a square shape, the loops of the mesh are square shaped as well.
+
+Each loop of the mesh is a place to potentially place a primary block. The decision process of whether of not to insert a primary block to a given loop is done as follows:
+
+\begin{enumerate}
+  \item Calculate the area covered by a loop of the mesh. This computation needs to be done only once, since every loop of the mesh is identical.
+
+  \item Calculate the area within that mesh that belongs to the entity whose silhouette is being used to construct a structure. In this example, this entity is the cow.
+
+  \item If the area found in number 2 is greater than or equal to half of the area found in number 1, insert a primary block there. Otherwise, leave it empty.
+\end{enumerate}
+
+Below, four loops in the mesh of the cow are selected to demonstrate this. The green ones are the ones where a primary block will be inserted, and the red ones are the ones where a primary block will not be inserted.
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-meshed-marked.jpg}
+\end{figure}
+
+After this process is repeated for every loop in the mesh, we obtain a preliminary structure that consists of only the primary blocks. In this example, this would be as follows:
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-only_primary_blocks.png}
+\end{figure}
+
+As a side note, the reason for the flipping of the image with respect to Y axis is Potrace. As explained in chapter \ref{sec:algorithm}, Potrace turns the image upside down tracing it. In other words, it flips the image with respect to X axis from the vertical center of the image. Similar to this, Potrace flips the image with respect to Y axis from the horizontal center of the image. Although we take measures to re-flip the image to upright position, we don't take measures to re-flip to image to the original horizontal orientation.
+
+After the primary blocks have been inserted, it is time to insert the platform blocks. As you can observe, some primary blocks don't have anything underneath them. That is, some of them just hang in the air. Well, the truth is, they don't hang in the air. When the level starts, as a result of the gravity in the physics engine of the game, they fall down. Hence, we need to prevent this from happening.
+
+In order to prevent this from happening, we use the following algorithm:
+
+\begin{enumerate}
+  \item Find out which primary blocks have nothing underneath them.
+
+  \item Get the row index (the order of the row starting from the ground and going upward) and put this row index into a set.
+
+  \item After this has been repeated for every block, insert platform blocks below every row that is indicated in the set that is created in the previous step.
+\end{enumerate}
+
+After the insertion of the platform blocks, the structure becomes the following:
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-primary_and_platform_blocks.png}
+\end{figure}
+
+After the insertion of the blocks, we insert the enemies, which are the pigs. The algorithm for it is as follows:
+
+\begin{enumerate}
+  \item Find out how many primary blocks each pig covers vertically. This is done simply by dividing the height of a pig by the height of the primary block. This will give us the number of primary blocks to cover pig height. This will be done only once.
+
+  \item Find out how many primary blocks each pig covers horizontally. This is done simply by dividing the width of a pig by the width of the primary block. This will give us the number of primary blocks to cover pig width. This will be done only once.
+
+  \item Find the platform block rows where the next platform block row below is away by at least the number of primary blocks to cover pig height.
+
+  \item For each platform block of each such row, starting from the center of the platform block, start removing primary blocks alternating right and left. Stop removing primary blocks until the number of primary blocks to cover pig width blocks have been removed.
+
+  \item Repeat the previous step downwards for the number of primary blocks to cover pig height times.
+
+  \item To the center of the space created, insert a pig.
+\end{enumerate}
+
+After inserting the pigs, the structure is as follows:
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-complete.png}
+\end{figure}
+
 \chapter{Conclusion}\label{sec:conclusion}
 
-The general goal of PCG is to provide new content through an automated process. This has the potential to improve the long-levity of the game itself as the content is never explicitly the ‘same’ and/or there is never an ‘end’ to the game. Moreover, it also implies that the cost of creating new games might decrease because it is no longer necessary to explicitly design every part of the gaming experience. In this thesis I am explicitly interested in the issue of PCG under a physics based gaming environment of which titles such as Angry Birds and Cut the Rope represent well known examples. Within the context of this work I concentrate on an ‘Angry Birds’ style of task. That is to say, the player has to use their skill in interpreting the Newtonian physics to aim Angry Bird projectiles with different properties to score points. Part of the process involves the destruction of objects that could be blocking the path to the target. Unlike previous work in PCG for this style of game I adopt an approach in which image data, possibly even captured by the user, represent the basis for designing the Angry Bird structure in which pigs are placed. The motivation for doing so is to increase the range of complexity of the resulting structures, while simultaneously reminding the reader of the original object. I believe that such an approach will both challenge and entertain the user.
+The general goal of PCG is to provide new content through an automated process. This has the potential to improve the longevity of the game itself as the content is never explicitly the ‘same’ and/or there is never an ‘end’ to the game. Moreover, it also implies that the cost of creating new games might decrease because it is no longer necessary to explicitly design every part of the gaming experience. In this thesis I am explicitly interested in the issue of PCG under a physics based gaming environment of which titles such as Angry Birds and Cut the Rope represent well known examples. Within the context of this work I concentrate on an ‘Angry Birds’ style of task. That is to say, the player has to use their skill in interpreting the Newtonian physics to aim Angry Bird projectiles with different properties to score points. Part of the process involves the destruction of objects that could be blocking the path to the target. Unlike previous work in PCG for this style of game I adopt an approach in which image data, possibly even captured by the user, represent the basis for designing the Angry Bird structure in which pigs are placed. The motivation for doing so is to increase the range of complexity of the resulting structures, while simultaneously reminding the reader of the original object. I believe that such an approach will both challenge and entertain the user.
 
 The algorithm adopted first requires that the foreground object from the image is identified using image editing software, for which several applications are available. With the target object identified, a corresponding silhouette is extracted. The silhouette is used as the basis for defining a low resolution matrix expressing the basic location for square blocks. However, as soon as the original object (and therefore the corresponding matrix) has any overhang, then gravity will result in blocks free falling. I therefore also introduce a process for identifying the overhanging blocks and replace (sequences) of them with horizontal rectangles, such that the stability of the resulting structure is initially guaranteed. A final process provides for the automatic placement of pigs within the structure, such that holes and supporting structures are introduced into the structure.
 
