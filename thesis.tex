@@ -57,7 +57,8 @@ From the perspective of creating more complex builds, the most recent work of Fe
 \begin{figure}
 \begin{center}
 \includegraphics[width=9cm]{./Ferreira2.pdf}
-\caption{Example of structures built using the PCG of Ferreira et al. \cite{ferreira18}.}
+\caption{Example of structures built using the PCG of Ferreira et al.
+\cite{ferreira18}.}
 \label{fig:ferreiraEg}
 \end{center}
 \end{figure}
@@ -68,6 +69,7 @@ We start by selecting an image that has the potential to be a good candidate for
 
 \begin{figure}[H]
   \centering
+	\caption{Flowchart demonstrating the process of vectorizing the raster image}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/science_birds_pcg-raster_to_vector-edited.png}
 \end{figure}
 
@@ -80,6 +82,7 @@ Some of the steps in the flowchart are explained in detail below:
 
   \begin{figure}[H]
     \centering
+		\caption{Input cow image}
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow.jpg}
   \end{figure}
 
@@ -87,6 +90,7 @@ Some of the steps in the flowchart are explained in detail below:
 
   \begin{figure}[H]
     \centering
+		\caption{Cow image converted to black-and-white}
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-black-and-white.jpg}
   \end{figure}
 
@@ -96,6 +100,7 @@ Some of the steps in the flowchart are explained in detail below:
 
   \begin{figure}[H]
     \centering
+		\caption{Black-and-white cow image after being denoised}
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-black-and-white-denoised.jpg}
   \end{figure}
 
@@ -106,6 +111,7 @@ Some of the steps in the flowchart are explained in detail below:
 
   \begin{figure}[H]
     \centering
+		\caption{Black-and-white cow image after being denoised and vectorized}
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-black-and-white-denoised-converted-from-svg.jpg}
   \end{figure}
 
@@ -115,6 +121,7 @@ Some of the steps in the flowchart are explained in detail below:
 
   \begin{figure}[H]
     \centering
+		\caption{Vectorized cow image with a `polygon` element, instead of a `path` element}
     \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-black-and-white-denoised-polygon.jpg}
   \end{figure}
 \end{enumerate}
@@ -227,6 +234,7 @@ we feed this SVG image into the main script. In the main script, the following h
       \end{enumerate}
 
       \begin{figure}[H]
+				\caption{White bird}
         \includegraphics[width=.5\textwidth,keepaspectratio]{birds/white.png}
       \end{figure}
 
@@ -235,6 +243,7 @@ we feed this SVG image into the main script. In the main script, the following h
       BirdBlue is a regular bird that is smaller than BirdWhite.
 
       \begin{figure}[H]
+				\caption{Blue bird}
         \includegraphics[width=.5\textwidth,keepaspectratio]{birds/blue.png}
       \end{figure}
 
@@ -243,6 +252,7 @@ we feed this SVG image into the main script. In the main script, the following h
       BirdYellow is around the same size with BirdBlue, only that it is of yellow color.
 
       \begin{figure}[H]
+				\caption{Yellow bird}
         \includegraphics[width=.5\textwidth,keepaspectratio]{birds/yellow.png}
       \end{figure}
 
@@ -251,6 +261,7 @@ we feed this SVG image into the main script. In the main script, the following h
       BirdRed is similar to BirdBlue and BirdYellow, only that it is of red color.
 
       \begin{figure}[H]
+				\caption{Red bird}
         \includegraphics[width=.5\textwidth,keepaspectratio]{birds/red.png}
       \end{figure}
 
@@ -259,6 +270,7 @@ we feed this SVG image into the main script. In the main script, the following h
       BirdBlack is very similar to BirdWhite in terms of size. However, BirdBlack has one property that is not observed in any of the other birds. It has the ability to explode. Upon making the first contact with any kind of surface, be it the ground, a block, a platform, a pig or a TNT block, BirdBlack becomes "rigged to explode". This "rigged to explode" state is expressed by the BirdBlack's body flashing red intermittently. That is, it's body is covered with a red hue, and then it becomes normal. This state repeats a couple times a second until the bird explodes, which takes a couple seconds. Upon explosion, any movable thing that is in the immediate surrounding of the BirdBlack is pushed away from BirdBlack. This can help with knocking down more blocks and eliminating more pigs (that is, enemies), if the BirdBlack is launched in a manner that the explosion will happen in a strategically beneficial place which will allow these.
 
       \begin{figure}[H]
+				\caption{Black bird}
         \includegraphics[width=.5\textwidth,keepaspectratio]{birds/black.png}
       \end{figure}
     \end{enumerate}
@@ -539,6 +551,7 @@ This chapter walks through construction of a Science Birds level from a given ra
 Let's assume that the user of the programmatic content generator has obtained the following image:
 
 \begin{figure}[H]
+	\caption{The raw, unedited cow image}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-unedited.jpg}
 \end{figure}
 
@@ -547,6 +560,7 @@ First, the user has to trim this image so that only the cow itself is remaining 
 After the cow is obtained, the image becomes the following:
 
 \begin{figure}[H]
+	\caption{Edited cow image}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow.jpg}
 \end{figure}
 
@@ -555,6 +569,7 @@ After that, this image is converted to black-and-white, denoised and vectorized.
 After vectorization, the following image is obtained:
 
 \begin{figure}[H]
+	\caption{Vectorized cow image}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-black-and-white-denoised-polygon.jpg}
 \end{figure}
 
@@ -563,6 +578,7 @@ This image represents the silhouette that is obtained from the input image. Afte
 In the programmatic content generator, the image is partitioned into a mesh. The shapes of the individual loops (the identical components that compose the mesh) are the same as the shape of the primary block that is declared in the configuration file. The only difference between the two is the size of the loops. According to the size of the input image, without changing the aspect ratio, the size of the loop can be shrunken, expanded or kept the same. This is done in order to comply with the number of primary blocks to have on the X axis, which is again declared in the configuration file.
 
 \begin{figure}[H]
+	\caption{The mesh on the cow image}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-meshed-plain.jpg}
 \end{figure}
 
@@ -581,12 +597,14 @@ Each loop of the mesh is a place to potentially place a primary block. The decis
 Below, four loops in the mesh of the cow are selected to demonstrate this. The green ones are the ones where a primary block will be inserted, and the red ones are the ones where a primary block will not be inserted.
 
 \begin{figure}[H]
+	\caption{Individual loops in the mesh that will contain a primary block and that won't}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-meshed-marked.jpg}
 \end{figure}
 
 After this process is repeated for every loop in the mesh, we obtain a preliminary structure that consists of only the primary blocks. In this example, this would be as follows:
 
 \begin{figure}[H]
+	\caption{Generated structure with only primary blocks}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-only_primary_blocks.png}
 \end{figure}
 
@@ -607,6 +625,7 @@ In order to prevent this from happening, we use the following algorithm:
 After the insertion of the platform blocks, the structure becomes the following:
 
 \begin{figure}[H]
+	\caption{Generated structure with primary blocks and platform blocks}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-primary_and_platform_blocks.png}
 \end{figure}
 
@@ -629,6 +648,7 @@ After the insertion of the blocks, we insert the enemies, which are the pigs. Th
 After inserting the pigs, the structure is as follows:
 
 \begin{figure}[H]
+	\caption{Generated structure with primary blocks, platform blocks and pigs}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/cow-complete.png}
 \end{figure}
 
@@ -651,101 +671,121 @@ Another potential area of development is to consider the use of some recent outc
 In this section, some sample images and Science Birds levels that are generated from these images are presented.
 
 \begin{figure}
+	\caption{Sample input image and output level: Cat}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/animals/cat.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/animals/cat.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Cow}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/animals/cow.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/animals/cow.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Dog}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/animals/dog.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/animals/dog.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Hedgehog}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/animals/hedgehog.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/animals/hedgehog.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Taj Mahal}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/buildings/taj_mahal.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/buildings/taj_mahal.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Triumphal Arch}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/buildings/triumphal_arch.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/buildings/triumphal_arch.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Parthenon}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/buildings/parthenon.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/buildings/parthenon.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Louvre Pyramid}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/buildings/louvre_pyramid.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/buildings/louvre_pyramid.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Grime}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/halloween/grime.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/halloween/grime.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Jack-o-Lantern}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/halloween/jack_o_lantern.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/halloween/jack_o_lantern.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Haunted House}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/halloween/haunted_house.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/halloween/haunted_house.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Candy Bowl}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/halloween/candy_bowl.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/halloween/candy_bowl.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Chimneys}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/mechanisms/chimneys.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/mechanisms/chimneys.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Water Wheel}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/mechanisms/water_wheel.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/mechanisms/water_wheel.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Combine Harvester}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/mechanisms/combine_harvester.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/mechanisms/combine_harvester.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Inclined Plane}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/mechanisms/inclined_plane.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/mechanisms/inclined_plane.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Catamaran}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/ships/catamaran.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/ships/catamaran.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Ferry}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/ships/ferry.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/ships/ferry.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Galleon}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/ships/galleon.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/ships/galleon.png}
 \end{figure}
 
 \begin{figure}
+	\caption{Sample input image and output level: Rowboat}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/pictures/ships/rowboat.jpg}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{levels/screenshots/ships/rowboat.png}
 \end{figure}
