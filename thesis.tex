@@ -79,7 +79,7 @@ Some of the steps in the flowchart are explained in detail below:
 \begin{enumerate}
   \item Converting a raster image to black-and-white: The reason for this is actually clear. We have stated that the content, lighting, coloring, resolution size or format of the image is of no concern to us, as we have stated that the only use of the image is the outline of the structure represented in that image. We have also stated that the raster image, for the purposes of generating a Science Birds structure is of no use to us, since it is not possible (or, straightforward) to obtain the outline data of the image from the raster image. Since that's the case, content, lighting and similar are simply redundant information for all of our purposes. Hence, in order to have an easier and more precise conversion from raster to vector, converting a raster image to black-and-white is a useful first step.
 
-  For example, if the given input image is the image in figure \ref{fig:cow_input}, after the end of this step, the image in figure \ref{fig:cow_black_and_white} will form.
+  For example, if the given input image is the image in Figure \ref{fig:cow_input}, after the end of this step, the image in Figure \ref{fig:cow_black_and_white} will form.
 
   \begin{figure}
     \centering
@@ -97,7 +97,7 @@ Some of the steps in the flowchart are explained in detail below:
 
   \item Denoising this black-and-white image: Although converting a raster image to black-and-white comes a long way for vectorizing that image, the black-and-white image after the conversion is in fact, noisy. That is, the image is in black-and-white and for the most part, represents the shape of the structure that is depicted in the original raster image. However, there is same granularity, some noise, on the edges of the structure after the conversion. This is, of course something that is not desirable, since this only makes it harder to trace this image. That is, tracing the image in this state can result in multiple, irrelevant curves in the output, instead of a single curve that represents the structure. This is not something we want, since the irrelevant curves will simply result in erroneous structure constructions. Hence, in order to remove this unwanted effect, we simply denoise the resulting black-and-white image and hence, we obtain a smooth black-and-white image that is much more suitable for producing a fine and sharp vector image.
 
-  After this step, the image in figure \ref{fig:cow_black_and_white_denoised} is formed.
+  After this step, the image in Figure \ref{fig:cow_black_and_white_denoised} is formed.
 
   \begin{figure}
     \centering
@@ -109,7 +109,7 @@ Some of the steps in the flowchart are explained in detail below:
   \item "Tracing" this denoised, black-and-white image in order to obtain an SVG image: Theoretically, the raster image can be traced into a vector image using any method. Specifically, we are using the open source program named Potrace, written by Peter Selinger, for this task.
   One of the rather important reasons for converting the original raster image to black-and-white, instead of directly tracing it (that is, creating a vector image out of it) is that the tracer (vectorizer) software that we use, Potrace, works only on black-and-white images. That is, the behavior of Potrace for non black-and-white images is undefined. Hence, we opt to use a black-and-white image as the input for Potrace. That is the main reason that we convert the original raster image into black-and-white, instead of feeding it to Potrace as is.
 
-  After this step, the image in figure \ref{fig:cow_black_and_white_denoised_vectorized} is formed.
+  After this step, the image in Figure \ref{fig:cow_black_and_white_denoised_vectorized} is formed.
 
   \begin{figure}
     \centering
@@ -120,7 +120,7 @@ Some of the steps in the flowchart are explained in detail below:
 
   \item Potrace traces the raster image into a vector image successfully. However, in the output, it uses SVG \lstinline{path} elements. For general purposes, this is perfectly fine. However, the main reason that we need the SVG is in order to be able to cleanly determine the outlines of the structure represented by the raster image. The reason for doing this is as follows: When the image is in one of the raster formats, determining the outline of the structure represented by this raster image is not very straightforward. However, since all we need for the purpose of generating a Science Birds structure is the outline of the structure represented in the raster image, we need a way to attain the information about the outline of the structure represented in the raster image. This is where the SVG, specifically an SVG with a \lstinline{polygon} element, comes into play. Normally raster images represent an image as a collection of pixels. Basically, in a raster image, there is no notion of a shape. That is, in a raster image, mostly the image is represented as a collection of independent picture elements (pixels). Hence, in a raster image, it is not straightforward at all to determine what sort of shape is being represented by this image. In other words, there is no proper notion of a "shape" in a raster image.
 
-  After this step, the image in figure \ref{fig:cow_black_and_white_denoised_vectorized_polygon} is formed.
+  After this step, the image in Figure \ref{fig:cow_black_and_white_denoised_vectorized_polygon} is formed.
 
   \begin{figure}
     \centering
