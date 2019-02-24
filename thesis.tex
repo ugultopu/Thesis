@@ -65,11 +65,12 @@ From the perspective of creating more complex builds, the most recent work of Fe
 
 \chapter{Image Capture and Pre-processing}\label{sec:imagecap}
 
-We start by selecting an image that has the potential to be a good candidate for constructing a level. This potential is primarily determined by the shape of the outline of the object represented by the image, as the content, lighting, coloring, resolution, size and even format is not of any concern of us for the purposes of generating a level. This is because the only use of the input image, the raster image, for us is to convert the input image into a vector image, specifically a Scalable Vector Graphics (SVG) image, before executing the code that actually generates a Science Birds structure. Since this code operates on an SVG image, specifically an SVG image with a \lstinline{polygon} element, all the operation that we do before feeding an SVG image that contains a \lstinline{polygon} element to the code can be simply understood as the "preprocessing stage" for constructing a Science Birds structure. Nevertheless, in order to start with a raster image and attain a Science Birds structure, all the steps in the preprocessing stage are necessary. These steps can be listed as follows:
+We start by selecting an image that has the potential to be a good candidate for constructing a level. This potential is primarily determined by the shape of the outline of the object represented by the image, as the content, lighting, coloring, resolution, size and even format is not of any concern of us for the purposes of generating a level. This is because the only use of the input image, the raster image, for us is to convert the input image into a vector image, specifically a Scalable Vector Graphics (SVG) image, before executing the code that actually generates a Science Birds structure. Since this code operates on an SVG image, specifically an SVG image with a \lstinline{polygon} element, all the operation that we do before feeding an SVG image that contains a \lstinline{polygon} element to the code can be simply understood as the "preprocessing stage" for constructing a Science Birds structure. Nevertheless, in order to start with a raster image and attain a Science Birds structure, all the steps in the preprocessing stage are necessary. These steps are listed in Figure \ref{fig:flowchart}.
 
-\begin{figure}[H]
-  \centering
+\begin{figure}
+	\centering
 	\caption{Flowchart demonstrating the process of vectorizing the raster image}
+	\label{fig:flowchart}
   \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{process/science_birds_pcg-raster_to_vector-edited.png}
 \end{figure}
 
