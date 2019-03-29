@@ -1,0 +1,1 @@
+gs -dPDFA -dBATCH -dNOPAUSE -sProcessColorModel=DeviceCMYK -sDEVICE=pdfwrite -sPDFACompatibilityPolicy=1 -sOutputFile=Gultopu-Utku-MCSC-CSCI-February-2019.pdf_a Gultopu-Utku-MCSC-CSCI-February-2019.pdf
